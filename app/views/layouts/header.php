@@ -51,7 +51,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 1rem;
+                padding: 1rem 1.25rem;
                 background: white;
                 border-bottom: 1px solid #dee2e6;
                 position: sticky;
@@ -82,6 +82,13 @@
 
             .sidebar-overlay {
                 display: none !important;
+            }
+        }
+
+        /* Ensure proper alignment on desktop */
+        @media (min-width: 768px) {
+            main.col-md-10 {
+                padding: 0 !important;
             }
         }
     </style>

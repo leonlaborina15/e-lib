@@ -43,6 +43,9 @@ $routes = [
     'users/delete' => 'UserController@delete',
     'profile' => 'UserController@profile',
     'logs' => 'UserController@logs',
+    'reviews' => 'ReviewController@index',
+    'reviews/store' => 'ReviewController@store',
+    'reviews/delete' => 'ReviewController@delete',
 ];
 
 if (!isset($routes[$route])) {

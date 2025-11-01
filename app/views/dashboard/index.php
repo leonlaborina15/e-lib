@@ -353,6 +353,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
 .bi {
     color: var(--primary) !important;
 }
+
 </style>
 
 <div class="dashboard-content">

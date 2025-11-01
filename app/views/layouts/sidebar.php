@@ -5,7 +5,7 @@
         <nav class="col-md-2 sidebar" id="mainSidebar">
             <div class="position-sticky">
                 <!-- Close button for mobile -->
-                <div class="d-md-none text-end p-3">
+                <div class="d-lg-none text-end p-3">
                     <button class="btn btn-link text-dark" onclick="toggleSidebar()">
                         <i class="bi bi-x-lg" style="font-size: 1.5rem;"></i>
                     </button>
@@ -17,7 +17,7 @@
                         <!-- Your PNG logo here. Place logo.png in public/assets/ -->
                         <img src="<?= BASE_URL ?>assets/logo1.png" alt="Logo" style="max-width: 64px; max-height: 64px; margin-bottom: 0.5rem;">
                     </div>
-                    <h4>My Library</h4> <!-- Update your brand name here if desired -->
+                    <h4>My Library</h4>
                     <p class="text-muted mb-0" style="font-size: 0.875rem;">
                         <?= htmlspecialchars($_SESSION['name']) ?>
                     </p>
@@ -51,7 +51,12 @@
                             <i class="bi bi-clock-history"></i> Reading History
                         </a>
                     </li>
-                    
+                    <li class="nav-item">
+                        <a href="<?= BASE_URL ?>?route=reviews"
+                           class="nav-link <?= ($_GET['route'] ?? '') == 'reviews' ? 'active' : '' ?>">
+                            <i class="bi bi-star-fill"></i> Reviews
+                        </a>
+                    </li>
 
                     <?php if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'librarian'): ?>
                     <hr>
@@ -113,16 +118,13 @@
                         <i class="bi bi-moon" id="themeIcon"></i>
                     </span>
                 </div>
-
-                <!-- Version -->
-
             </div>
         </nav>
 
         <!-- Main Content -->
         <main class="col-md-10 ms-sm-auto">
-            <!-- Top Bar (Desktop Only) -->
-            <div class="d-none d-md-flex justify-content-between align-items-center border-bottom ps-4" style="padding-top: 1.5rem; padding-bottom: 1rem;">
+            <!-- Top Bar (Desktop Only) - FIXED BREAKPOINT -->
+            <div class="d-none d-lg-flex justify-content-between align-items-center border-bottom" style="padding: 1.5rem 2rem 1rem 2rem;">
                 <div>
                     <h1><?= $page_title ?? 'Dashboard' ?></h1>
                     <nav aria-label="breadcrumb">
@@ -145,16 +147,16 @@
                             type="button"
                             data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            <div class="avatar avatar-sm" style="overflow: hidden;">
-    <?php if (!empty($_SESSION['photo'])): ?>
-        <img src="<?= BASE_URL . 'uploads/photos/' . htmlspecialchars($_SESSION['photo']) ?>"
-             alt="Profile Photo"
-             style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
-    <?php else: ?>
-        <?= strtoupper(substr($_SESSION['name'], 0, 1)) ?>
-    <?php endif; ?>
-</div>
-<span><?= htmlspecialchars($_SESSION['name']) ?></span>
+                        <div class="avatar avatar-sm" style="overflow: hidden;">
+                            <?php if (!empty($_SESSION['photo'])): ?>
+                                <img src="<?= BASE_URL . 'uploads/photos/' . htmlspecialchars($_SESSION['photo']) ?>"
+                                     alt="Profile Photo"
+                                     style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                            <?php else: ?>
+                                <?= strtoupper(substr($_SESSION['name'], 0, 1)) ?>
+                            <?php endif; ?>
+                        </div>
+                        <span><?= htmlspecialchars($_SESSION['name']) ?></span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow">
                         <li>
@@ -174,13 +176,13 @@
                 </div>
             </div>
 
-            <!-- Mobile Page Title -->
-            <div class="d-md-none p-3">
+            <!-- Mobile Page Title - FIXED BREAKPOINT -->
+            <div class="d-lg-none p-3">
                 <h2 class="mb-0"><?= $page_title ?? 'Dashboard' ?></h2>
             </div>
 
-            <!-- Content Wrapper -->
-            <div class="p-3 p-md-4">
+            <!-- Content Wrapper - FIXED ALIGNMENT -->
+            <div class="p-3" style="padding: 1.5rem 2rem !important;">
                 <!-- Alerts -->
                 <?php if (isset($_SESSION['success'])): ?>
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -235,7 +237,7 @@ function toggleSidebar() {
 
 // Close sidebar when clicking a link (mobile only)
 document.addEventListener('DOMContentLoaded', function() {
-    if (window.innerWidth < 768) {
+    if (window.innerWidth < 992) {
         const sidebarLinks = document.querySelectorAll('#mainSidebar .nav-link');
         sidebarLinks.forEach(link => {
             link.addEventListener('click', function() {
