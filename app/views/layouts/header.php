@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?? 'E-Library' ?> - E-Library System</title>
+    <title><?= $title ?? 'E-Library' ?> - D-Library System</title>
 
     <!-- Local Bootstrap CSS -->
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/bootstrap.min.css">
@@ -13,6 +13,11 @@
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css">
 
     <style>
+        /* Smooth transitions for theme switching */
+        body, .card, .sidebar, .mobile-header, main, .btn, .form-control, .modal-content {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
         /* CRITICAL FIX: Override Bootstrap grid on tablet/mobile */
         @media (max-width: 991px) {
             /* Force sidebar to behave as overlay, not grid column */
@@ -23,8 +28,8 @@
                 width: 280px !important;
                 height: 100vh;
                 z-index: 1050;
-                transition: left 0.3s ease;
-                background: white;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                background: var(--bg);
                 overflow-y: auto;
                 box-shadow: 2px 0 10px rgba(0,0,0,0.1);
                 flex: none !important;
@@ -48,7 +53,7 @@
                 padding: 0 !important;
             }
 
-            /* Overlay */
+            /* Overlay with animation */
             .sidebar-overlay {
                 display: none;
                 position: fixed;
@@ -58,32 +63,45 @@
                 height: 100%;
                 background: rgba(0,0,0,0.5);
                 z-index: 1040;
+                opacity: 0;
+                transition: opacity 0.3s ease;
             }
 
             .sidebar-overlay.show {
                 display: block;
+                opacity: 1;
             }
 
-            /* Mobile header */
+            /* Mobile header with dark theme support */
             .mobile-header {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 padding: 1rem 1.25rem;
-                background: white;
-                border-bottom: 1px solid #dee2e6;
+                background: var(--bg);
+                border-bottom: 1px solid var(--border);
                 position: sticky;
                 top: 0;
                 z-index: 1030;
+                transition: background-color 0.3s ease, border-color 0.3s ease;
             }
 
             .hamburger-btn {
                 background: none;
                 border: none;
                 font-size: 1.5rem;
-                color: #333;
+                color: var(--text);
                 cursor: pointer;
                 padding: 0.5rem;
+                transition: transform 0.2s ease;
+            }
+
+            .hamburger-btn:active {
+                transform: scale(0.95);
+            }
+
+            .mobile-header h5 {
+                color: var(--text);
             }
 
             /* Override Bootstrap row/container behavior */
@@ -119,9 +137,106 @@
             }
         }
 
+        /* Page Load Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Apply animations to content */
+        main > * {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Stagger animation for multiple cards */
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Smooth hover effects */
+        .card, .btn, .book-card, .stat-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Loading skeleton for images */
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg-muted) 25%, var(--bg-subtle) 50%, var(--bg-muted) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
         /* Dark theme sidebar background fix */
         body.dark-theme .sidebar {
             background: var(--bg, #09090b);
+        }
+
+        body.dark-theme .mobile-header {
+            background: var(--bg);
+            border-bottom-color: var(--border);
+        }
+
+        /* Scroll animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert {
+            animation: slideDown 0.4s ease-out;
         }
     </style>
 </head>
@@ -130,7 +245,7 @@
 <!-- Mobile Header with Hamburger and Logo -->
 <?php if (isset($_SESSION['user_id'])): ?>
 <div class="mobile-header d-lg-none">
-    <button class="hamburger-btn" onclick="toggleSidebar()">
+    <button class="hamburger-btn" onclick="toggleSidebar()" aria-label="Toggle Menu">
         <i class="bi bi-list"></i>
     </button>
     <div class="d-flex align-items-center justify-content-center" style="gap:0.5rem;">

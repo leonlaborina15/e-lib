@@ -14,7 +14,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     --accent: #8b94ab;
 }
 
-/* Center main content on mobile */
+
 @media (max-width: 600px) {
     body {
         background: var(--muted-bg);

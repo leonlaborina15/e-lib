@@ -30,17 +30,26 @@ require_once __DIR__ . '/../layouts/sidebar.php';
 </div>
 
 <!-- Category Filters -->
-<div class="category-filters mb-4">
-    <a href="<?= BASE_URL ?>?route=books"
-       class="btn <?= !$current_category ? 'active' : '' ?>">
-        All Categories
-    </a>
-    <?php foreach ($categories as $cat): ?>
-        <a href="<?= BASE_URL ?>?route=books&category=<?= urlencode($cat) ?>"
-           class="btn <?= $current_category === $cat ? 'active' : '' ?>">
-            <?= htmlspecialchars($cat) ?>
+<div class="category-filters-wrapper mb-4">
+    <div class="category-filters" id="categoryFilters">
+        <a href="<?= BASE_URL ?>?route=books"
+           class="category-badge <?= !$current_category ? 'active' : '' ?>">
+            All Categories
         </a>
-    <?php endforeach; ?>
+        <?php foreach ($categories as $cat): ?>
+            <a href="<?= BASE_URL ?>?route=books&category=<?= urlencode($cat) ?>"
+               class="category-badge <?= $current_category === $cat ? 'active' : '' ?>">
+                <?= htmlspecialchars($cat) ?>
+            </a>
+        <?php endforeach; ?>
+    </div>
+    <!-- Scroll indicators -->
+    <div class="scroll-indicator scroll-left" id="scrollLeft">
+        <i class="bi bi-chevron-left"></i>
+    </div>
+    <div class="scroll-indicator scroll-right" id="scrollRight">
+        <i class="bi bi-chevron-right"></i>
+    </div>
 </div>
 
 <!-- Books Grid -->
@@ -73,6 +82,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
                     <?php if (!empty($book['cover_image'])): ?>
                         <img src="<?= BASE_URL ?>uploads/covers/<?= htmlspecialchars($book['cover_image']) ?>"
                              alt="<?= htmlspecialchars($book['title']) ?>"
+                             loading="lazy"
                              onerror="this.parentElement.innerHTML='<div class=\'d-flex align-items-center justify-content-center h-100 bg-light\'><i class=\'bi bi-book\' style=\'font-size: 2rem; color: #cbd5e0;\'></i></div>'">
                     <?php else: ?>
                         <div class="d-flex align-items-center justify-content-center h-100 bg-light">
@@ -194,12 +204,47 @@ function deleteBook(bookId, bookTitle) {
     }
 }
 
+// Category filter scroll functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const filterContainer = document.getElementById('categoryFilters');
+    const scrollLeft = document.getElementById('scrollLeft');
+    const scrollRight = document.getElementById('scrollRight');
+
+    if (filterContainer && scrollLeft && scrollRight) {
+        // Check if scrollable
+        function updateScrollIndicators() {
+            const isScrollable = filterContainer.scrollWidth > filterContainer.clientWidth;
+            const atStart = filterContainer.scrollLeft === 0;
+            const atEnd = filterContainer.scrollLeft + filterContainer.clientWidth >= filterContainer.scrollWidth - 5;
+
+            scrollLeft.style.display = isScrollable && !atStart ? 'flex' : 'none';
+            scrollRight.style.display = isScrollable && !atEnd ? 'flex' : 'none';
+        }
+
+        // Scroll buttons
+        scrollLeft.addEventListener('click', () => {
+            filterContainer.scrollBy({ left: -200, behavior: 'smooth' });
+        });
+
+        scrollRight.addEventListener('click', () => {
+            filterContainer.scrollBy({ left: 200, behavior: 'smooth' });
+        });
+
+        // Update on scroll
+        filterContainer.addEventListener('scroll', updateScrollIndicators);
+        window.addEventListener('resize', updateScrollIndicators);
+
+        // Initial check
+        updateScrollIndicators();
+    }
+});
+
 // Modern UI Pagination
 const BOOKS_PER_PAGE = 10;
 
 function setupPaginationUI() {
     const books = Array.from(document.querySelectorAll('.book-card'))
-        .filter(card => card.style.display !== 'none'); // Only visible books
+        .filter(card => card.style.display !== 'none');
     const totalBooks = books.length;
     const totalPages = Math.ceil(totalBooks / BOOKS_PER_PAGE);
 
@@ -260,8 +305,6 @@ function setupPaginationUI() {
     }
 
     showPage(currentPage);
-
-    // Save current page in window for persistence between search/pagination
     window.showBookPage = showPage;
 }
 
@@ -270,96 +313,141 @@ document.addEventListener('DOMContentLoaded', setupPaginationUI);
 
 <style>
 :root {
-    --primary: #23272f;
-    --card-bg: #fff;
-    --soft-bg: #f6f8fa;
-    --border: #e6e8ec;
-    --muted-bg: #f3f4f6;
-    --secondary: #7b8191;
+    --primary: var(--text);
+    --card-bg: var(--bg);
+    --soft-bg: var(--bg-subtle);
+    --border: var(--border);
+    --muted-bg: var(--bg-muted);
+    --secondary: var(--text-subtle);
 }
 
-/* Category Filters - Modern, Scrollable, Responsive */
+/* ============================================
+   CATEGORY FILTERS - IMPROVED
+   ============================================ */
+.category-filters-wrapper {
+    position: relative;
+}
+
 .category-filters {
     display: flex;
     flex-wrap: nowrap;
     gap: 0.5rem;
     overflow-x: auto;
-    padding-bottom: 0.3rem;
-    margin-bottom: 1.2rem;
-    scrollbar-width: thin;       /* Firefox */
-    scrollbar-color: #eaf2ff #fff;
+    overflow-y: hidden;
+    padding: 0.5rem 0;
+    margin: 0;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+    scroll-behavior: smooth;
 }
 
 .category-filters::-webkit-scrollbar {
-    height: 6px;
-    background: #fff;
+    display: none; /* Chrome/Safari */
 }
 
-.category-filters::-webkit-scrollbar-thumb {
-    background: #eaf2ff;
-    border-radius: 20px;
-}
-
-/* Modern pill style for category badges */
-.category-filters a.btn {
+/* Category badge styling */
+.category-badge {
+    flex-shrink: 0;
     white-space: nowrap;
-    border-radius: 999px;
-    padding: 0.28em 1.15em;
-    background: #f5f7fa;
-    color: #23272f;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    background: var(--bg-muted);
+    color: var(--text);
     font-weight: 500;
-    font-size: 1rem;
-    box-shadow: 0 1px 6px rgba(30,30,30,0.04);
-    border: 1.5px solid transparent;
-    transition: background 0.15s, color 0.15s, border 0.15s;
+    font-size: 0.875rem;
+    text-decoration: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    display: inline-block;
 }
 
-.category-filters a.btn.active,
-.category-filters a.btn:hover {
-    background: #eaf2ff;
-    color: #2153ff;
-    border: 1.5px solid #2153ff;
+.category-badge:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
+.category-badge.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    font-weight: 600;
+}
 
+/* Scroll indicators */
+.scroll-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+}
 
-/* Grid Layout */
+.scroll-indicator:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.scroll-left {
+    left: -12px;
+}
+
+.scroll-right {
+    right: -12px;
+}
+
+/* ============================================
+   BOOKS GRID - IMPROVED
+   ============================================ */
 .books-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 0.9rem;
+    gap: 1rem;
 }
 
-/* Book Card Base Styles */
 .book-card {
     background: var(--card-bg);
-    border-radius: 24px;
-    box-shadow: 0 1px 4px rgba(30,30,30,0.05);
-    font-size: 0.96rem;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     min-width: 0;
     position: relative;
     display: flex;
     flex-direction: column;
-    transition: box-shadow 0.15s;
-    padding: 0.7rem 0.6rem;
+    transition: all 0.3s ease;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
 }
 
 .book-card:hover {
-    box-shadow: 0 4px 14px rgba(30,30,30,0.11);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
 }
 
 /* Book Card Image */
 .book-card-image {
     width: 100%;
-    height: 120px;
-    border-radius: 8px;
+    height: 160px;
+    border-radius: 12px;
     overflow: hidden;
     background: var(--muted-bg);
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
 }
 
 .book-card-image img {
@@ -369,55 +457,70 @@ document.addEventListener('DOMContentLoaded', setupPaginationUI);
     display: block;
 }
 
+/* Book Title - FIXED FOR LONG TITLES */
 .book-title {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
-    color: var(--primary);
-    margin-bottom: 0.15rem;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    /* Multi-line ellipsis */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    min-height: 2.6em; /* Reserve space for 2 lines */
+}
+
+.book-author {
+    font-size: 0.85rem;
+    color: var(--text-subtle);
+    margin-bottom: 0.5rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.book-author {
-    font-size: 0.89rem;
-    color: var(--secondary);
-    margin-bottom: 0.13rem;
-}
-
 .book-category {
-    font-size: 0.82rem;
+    font-size: 0.75rem;
     background: var(--muted-bg);
-    color: var(--secondary);
+    color: var(--text-subtle);
     border-radius: 6px;
-    padding: 2px 8px;
+    padding: 0.25rem 0.5rem;
     font-weight: 500;
     display: inline-block;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .book-card .btn {
-    font-size: 0.86rem;
-    border-radius: 6px;
+    font-size: 0.85rem;
+    border-radius: 8px;
     font-weight: 500;
     border: none;
     box-shadow: none;
-    padding: 0.25em 0;
-    margin-bottom: 0.14em;
+    padding: 0.4rem 0.5rem;
+    margin-bottom: 0.25rem;
     width: 100%;
-    text-align: left;
+    text-align: center;
     display: flex;
     align-items: center;
-    gap: 0.55em;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .btn-soft-primary {
     background: #eaf2ff !important;
-    color: var(--primary) !important;
+    color: var(--text) !important;
 }
 .btn-soft-secondary {
     background: var(--muted-bg) !important;
-    color: var(--primary) !important;
+    color: var(--text) !important;
 }
 .btn-soft-warning {
     background: #fff7e7 !important;
@@ -432,127 +535,152 @@ document.addEventListener('DOMContentLoaded', setupPaginationUI);
     font-weight: 600;
 }
 
-/* Modern Pagination Styles */
+/* Pagination */
 .modern-pagination-controls {
     position: fixed;
-    right: 32px;
-    bottom: 32px;
+    right: 2rem;
+    bottom: 2rem;
     z-index: 99;
     display: flex;
-    gap: 0.4rem;
+    gap: 0.5rem;
     align-items: center;
-    background: rgba(255,255,255,0.9);
+    background: var(--bg);
+    border: 1px solid var(--border);
     border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(30,30,30,0.18);
-    padding: 0.6rem 1.3rem;
-    font-size: 1.08rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 0.75rem 1rem;
 }
 
 .modern-pagination-btn {
     border: none;
-    background: #eaf2ff;
-    color: var(--primary);
-    border-radius: 999px;
-    padding: 0.46rem 1.15rem;
+    background: var(--primary);
+    color: white;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
     font-weight: 600;
-    font-size: 1.06rem;
-    box-shadow: 0 1px 6px rgba(30,30,30,0.07);
+    font-size: 0.875rem;
     cursor: pointer;
-    transition: background 0.15s, box-shadow 0.17s;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    gap: 0.4em;
+    gap: 0.5rem;
 }
+
 .modern-pagination-btn:hover {
-    background: #d2e5ff;
-    box-shadow: 0 4px 16px rgba(30,30,30,0.16);
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 .modern-pagination-info {
     font-weight: 500;
-    color: var(--primary);
-    margin: 0 0.6rem;
+    color: var(--text);
+    margin: 0 0.5rem;
+    font-size: 0.875rem;
 }
 
+/* ============================================
+   MOBILE RESPONSIVE - IMPROVED
+   ============================================ */
 @media (max-width: 768px) {
+    .category-filters {
+        padding: 0.75rem 0;
+        gap: 0.5rem;
+    }
+
+    .category-badge {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.9rem;
+    }
+
+    .scroll-indicator {
+        width: 28px;
+        height: 28px;
+        font-size: 0.875rem;
+    }
+
     .books-grid {
         grid-template-columns: 1fr;
-        gap: 0.7rem;
+        gap: 1rem;
     }
+
     .book-card {
         display: flex;
         flex-direction: row;
         align-items: stretch;
-        min-height: 230px;
-        height: 230px;
         padding: 0;
-        border-radius: 24px;
-        overflow: hidden;
-        box-shadow: 0 1px 4px rgba(30,30,30,0.05);
-        background: var(--card-bg);
+        min-height: 180px;
     }
+
     .book-card-image {
-        width: 40%;
-        height: 100%;
+        width: 35%;
+        height: auto;
+        min-height: 180px;
         margin: 0;
-        border-radius: 24px 0 0 24px;
-        overflow: hidden;
-        display: flex;
-        align-items: stretch;
-        justify-content: stretch;
-        background: var(--muted-bg);
-        position: relative;
-        min-width: 0;
+        border-radius: 16px 0 0 16px;
     }
-    .book-card-image img,
-    .book-card-image > div {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
+
     .book-card-body {
-        width: 60%;
+        width: 65%;
+        padding: 1rem;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        padding: 1.1rem 1rem;
-        min-width: 0;
+        justify-content: space-between;
     }
-    .book-title, .book-author, .book-category {
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
+
+    .book-title {
+        font-size: 0.9rem;
+        -webkit-line-clamp: 2;
+        min-height: auto;
     }
+
+    .book-author {
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .book-category {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+    }
+
     .book-card .btn {
-        font-size: 0.86rem;
-        border-radius: 6px;
-        font-weight: 500;
-        border: none;
-        box-shadow: none;
-        padding: 0.25em 0;
-        margin-bottom: 0.14em;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.55em;
-        text-align: center;
+        font-size: 0.8rem;
+        padding: 0.5rem;
+        margin-bottom: 0.3rem;
     }
+
     .modern-pagination-controls {
-        right: 12px;
-        bottom: 12px;
-        padding: 0.5rem 0.6rem;
-        font-size: 1.01rem;
+        right: 1rem;
+        bottom: 1rem;
+        padding: 0.5rem 0.75rem;
     }
+
     .modern-pagination-btn {
-        padding: 0.38rem 0.7rem;
-        font-size: 1.01rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .modern-pagination-info {
+        font-size: 0.75rem;
     }
 }
 
+/* Dark theme adjustments */
+body.dark-theme .category-badge {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
 
+body.dark-theme .scroll-indicator {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
 
+body.dark-theme .book-card {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+body.dark-theme .book-card:hover {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+}
 </style>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

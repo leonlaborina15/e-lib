@@ -65,7 +65,7 @@ class AuthController extends BaseController {
         // Show login form
         $data = [
             'title' => 'Login',
-            'page_title' => 'Login to E-Library'
+            'page_title' => 'Login to D-Library'
         ];
 
         $this->view('auth/login', $data);
@@ -111,7 +111,7 @@ class AuthController extends BaseController {
 
                     $this->userModel->logActivity($userId, 'Registered and logged in');
 
-                    $_SESSION['success'] = 'Registration successful! Welcome to E-Library, ' . $name . '!';
+                    $_SESSION['success'] = 'Registration successful! Welcome to D-Library, ' . $name . '!';
                     $this->redirect('dashboard');
                 } else {
                     $_SESSION['error'] = 'Registration failed. Please try again.';

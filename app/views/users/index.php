@@ -42,7 +42,7 @@ body {
 
 .table thead th {
     font-weight: 600;
-    color: #23272f;
+    color: var(--text);
     letter-spacing: 0.03em;
     background: #f6f8fa;
     border-bottom: 2px solid #e6e8ec;
@@ -62,7 +62,7 @@ body {
     border-radius: 50%;
     background: #e6e8ec;
     font-weight: 700;
-    color: #23272f;
+    color: var(--text);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -154,7 +154,7 @@ body {
 }
 .empty-state h3 {
     font-weight: 700;
-    color: #23272f;
+    color: var(--text);
 }
 .empty-state .btn-primary {
     margin-top: 1rem;
@@ -188,7 +188,7 @@ body {
     font-size: 1.35rem;
     font-weight: 700;
     margin: 0.3em 0;
-    color: #23272f;
+    color: var(--text); 
 }
 
 .row.text-center.g-3 small {

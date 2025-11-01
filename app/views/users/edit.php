@@ -5,6 +5,14 @@ require_once __DIR__ . '/../layouts/sidebar.php';
 ?>
 
 <style>
+    :root {
+    --primary: #23272f;
+    --card-bg: #fff;
+    --soft-bg: #f6f8fa;
+    --border: #e6e8ec;
+    --muted-bg: #f3f4f6;
+    --secondary: #7b8191;
+}
 .form-card {
     background: white;
     border-radius: 16px;

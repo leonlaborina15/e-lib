@@ -28,7 +28,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     height: 100px;
     border-radius: 50%;
     background: #fff;
-    color: #23272f;
+    color: var(--text);
     font-size: 2.5rem;
     font-weight: 700;
     display: flex;
@@ -44,13 +44,13 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     border: 1px solid #f0f0f0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     margin-bottom: 1.5rem;
-    color: #23272f;
+    color: var(--text);
 }
 
 .form-group-modern label {
     font-size: 0.875rem;
     font-weight: 600;
-    color: #23272f;
+    color: var(--text);
     margin-bottom: 0.5rem;
 }
 
@@ -60,7 +60,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     padding: 0.75rem 1rem;
     transition: all 0.2s ease;
     background: #fff;
-    color: #23272f;
+    color: var(--text);
 }
 
 .form-group-modern input:focus {
@@ -104,13 +104,13 @@ require_once __DIR__ . '/../layouts/sidebar.php';
 }
 
 .stat-icon i {
-    color: #23272f !important; /* Force dark gray/black icon */
+    color: var(--text)   !important; /* Force dark gray/black icon */
 }
 
 .stat-number {
     font-size: 1.7rem;
     font-weight: 600;
-    color: #23272f;
+    color: var(--text);
     margin-bottom: 2px;
 }
 
@@ -128,7 +128,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
 }
 
 .password-toggle:hover {
-    color: #23272f;
+    color: var(--text);
 }
 
 .btn-soft-primary, .btn-soft-secondary, .btn-soft-warning {
@@ -155,7 +155,7 @@ hr {
     color: #888 !important;
 }
 .bi {
-    color: #23272f !important;
+    color: var(--text)  !important;
 }
 .profile-header .bi {
     color: #fff !important; /* or rgba(255,255,255,0.8) for softer */
