@@ -13,25 +13,42 @@
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/style.css">
 
     <style>
-        /* Mobile Sidebar Styles */
-        @media (max-width: 767px) {
-            .sidebar {
-                position: fixed;
+        /* CRITICAL FIX: Override Bootstrap grid on tablet/mobile */
+        @media (max-width: 991px) {
+            /* Force sidebar to behave as overlay, not grid column */
+            .sidebar.col-md-2 {
+                position: fixed !important;
                 top: 0;
                 left: -280px;
-                width: 280px;
+                width: 280px !important;
                 height: 100vh;
                 z-index: 1050;
                 transition: left 0.3s ease;
                 background: white;
                 overflow-y: auto;
                 box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                flex: none !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
 
-            .sidebar.show {
+            .sidebar.col-md-2.show {
                 left: 0;
             }
 
+            /* Force main content to full width */
+            main.col-md-10 {
+                position: relative !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                flex: 0 0 100% !important;
+                padding: 0 !important;
+            }
+
+            /* Overlay */
             .sidebar-overlay {
                 display: none;
                 position: fixed;
@@ -47,6 +64,7 @@
                 display: block;
             }
 
+            /* Mobile header */
             .mobile-header {
                 display: flex;
                 align-items: center;
@@ -68,28 +86,42 @@
                 padding: 0.5rem;
             }
 
-            main.col-md-10 {
+            /* Override Bootstrap row/container behavior */
+            .container-fluid > .row {
                 margin-left: 0 !important;
-                width: 100% !important;
-                padding: 0 !important;
+                margin-right: 0 !important;
             }
         }
 
-        @media (min-width: 768px) {
+        /* Desktop - Clean layout */
+        @media (min-width: 992px) {
             .mobile-header {
-                display: none;
+                display: none !important;
             }
 
             .sidebar-overlay {
                 display: none !important;
             }
+
+            /* Let style.css fixed positioning work */
+            .sidebar.col-md-2 {
+                position: fixed !important;
+                flex: none !important;
+                max-width: none !important;
+            }
+
+            /* Proper spacing for main content */
+            main.col-md-10 {
+                margin-left: var(--sidebar-width, 260px) !important;
+                width: calc(100% - var(--sidebar-width, 260px)) !important;
+                max-width: calc(100% - var(--sidebar-width, 260px)) !important;
+                flex: 0 0 auto !important;
+            }
         }
 
-        /* Ensure proper alignment on desktop */
-        @media (min-width: 768px) {
-            main.col-md-10 {
-                padding: 0 !important;
-            }
+        /* Dark theme sidebar background fix */
+        body.dark-theme .sidebar {
+            background: var(--bg, #09090b);
         }
     </style>
 </head>
@@ -97,7 +129,7 @@
 
 <!-- Mobile Header with Hamburger and Logo -->
 <?php if (isset($_SESSION['user_id'])): ?>
-<div class="mobile-header d-md-none">
+<div class="mobile-header d-lg-none">
     <button class="hamburger-btn" onclick="toggleSidebar()">
         <i class="bi bi-list"></i>
     </button>

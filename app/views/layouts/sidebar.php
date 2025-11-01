@@ -113,11 +113,7 @@
                 </ul>
 
                 <!-- Theme Toggle -->
-                <div class="text-center mt-4">
-                    <span class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
-                        <i class="bi bi-moon" id="themeIcon"></i>
-                    </span>
-                </div>
+
             </div>
         </nav>
 

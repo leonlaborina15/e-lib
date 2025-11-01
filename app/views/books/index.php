@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', setupPaginationUI);
     overflow-x: auto;
     padding-bottom: 0.3rem;
     margin-bottom: 1.2rem;
-    scrollbar-width: thin;
+    scrollbar-width: thin;       /* Firefox */
     scrollbar-color: #eaf2ff #fff;
 }
 
@@ -321,7 +321,9 @@ document.addEventListener('DOMContentLoaded', setupPaginationUI);
     border: 1.5px solid #2153ff;
 }
 
-/* Grid Layout - FULLY RESPONSIVE */
+
+
+/* Grid Layout */
 .books-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -472,72 +474,11 @@ document.addEventListener('DOMContentLoaded', setupPaginationUI);
     margin: 0 0.6rem;
 }
 
-/* ==========================================
-   RESPONSIVE BREAKPOINTS
-   ========================================== */
-
-/* Medium Desktop/Laptop - 4 columns */
-@media (max-width: 1400px) {
-    .books-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 0.85rem;
-    }
-}
-
-/* Small Desktop/Tablet Landscape - 3 columns */
-@media (max-width: 1200px) {
-    .books-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.8rem;
-    }
-
-    .category-filters a.btn {
-        font-size: 0.95rem;
-        padding: 0.25em 1em;
-    }
-}
-
-/* Tablet Portrait - 2 columns */
-@media (max-width: 992px) {
-    .books-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
-    }
-
-    .book-card {
-        padding: 0.6rem 0.5rem;
-    }
-
-    .book-card-image {
-        height: 110px;
-    }
-
-    .book-title {
-        font-size: 0.95rem;
-    }
-
-    .book-author {
-        font-size: 0.85rem;
-    }
-}
-
-/* Mobile - 1 column horizontal layout */
 @media (max-width: 768px) {
-    .category-filters {
-        gap: 0.4rem;
-        padding-bottom: 0.22rem;
-    }
-
-    .category-filters a.btn {
-        font-size: 0.97rem;
-        padding: 0.25em 0.85em;
-    }
-
     .books-grid {
         grid-template-columns: 1fr;
         gap: 0.7rem;
     }
-
     .book-card {
         display: flex;
         flex-direction: row;
@@ -550,7 +491,6 @@ document.addEventListener('DOMContentLoaded', setupPaginationUI);
         box-shadow: 0 1px 4px rgba(30,30,30,0.05);
         background: var(--card-bg);
     }
-
     .book-card-image {
         width: 40%;
         height: 100%;
@@ -564,7 +504,6 @@ document.addEventListener('DOMContentLoaded', setupPaginationUI);
         position: relative;
         min-width: 0;
     }
-
     .book-card-image img,
     .book-card-image > div {
         width: 100%;
@@ -572,80 +511,40 @@ document.addEventListener('DOMContentLoaded', setupPaginationUI);
         object-fit: cover;
         display: block;
     }
-
     .book-card-body {
         width: 60%;
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
-        padding: 1rem 0.85rem;
+        justify-content: center;
+        padding: 1.1rem 1rem;
         min-width: 0;
-        gap: 0.35rem;
     }
-
-    .book-title {
-        font-size: 0.95rem;
-        font-weight: 600;
-        line-height: 1.3;
-        margin-bottom: 0.15rem;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    .book-title, .book-author, .book-category {
         white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
     }
-
-    .book-author {
-        font-size: 0.82rem;
-        line-height: 1.2;
-        margin-bottom: 0.15rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .book-category {
-        font-size: 0.75rem;
-        padding: 3px 8px;
-        margin-bottom: 0.35rem;
-        display: inline-block;
-        max-width: fit-content;
-    }
-
-    .book-card .d-grid {
-        gap: 0.3rem !important;
-        margin-top: auto;
-    }
-
     .book-card .btn {
-        font-size: 0.8rem;
-        border-radius: 8px;
+        font-size: 0.86rem;
+        border-radius: 6px;
         font-weight: 500;
         border: none;
         box-shadow: none;
-        padding: 0.4rem 0.6rem;
-        margin-bottom: 0;
+        padding: 0.25em 0;
+        margin-bottom: 0.14em;
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.4rem;
+        gap: 0.55em;
         text-align: center;
-        white-space: nowrap;
     }
-
-    .book-card .btn i {
-        font-size: 0.9rem;
-    }
-
     .modern-pagination-controls {
         right: 12px;
         bottom: 12px;
         padding: 0.5rem 0.6rem;
         font-size: 1.01rem;
     }
-
     .modern-pagination-btn {
         padding: 0.38rem 0.7rem;
         font-size: 1.01rem;
