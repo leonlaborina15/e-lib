@@ -14,7 +14,6 @@
                 <!-- Brand -->
                 <div class="text-center px-3 mb-4">
                     <div class="mb-3">
-                        <!-- Your PNG logo here. Place logo.png in public/assets/ -->
                         <img src="<?= BASE_URL ?>assets/logo1.png" alt="Logo" style="max-width: 64px; max-height: 64px; margin-bottom: 0.5rem;">
                     </div>
                     <h4>My Library</h4>
@@ -112,14 +111,12 @@
                     </li>
                 </ul>
 
-                <!-- Theme Toggle -->
-
             </div>
         </nav>
 
         <!-- Main Content -->
         <main class="col-md-10 ms-sm-auto">
-            <!-- Top Bar (Desktop Only) - FIXED BREAKPOINT -->
+            <!-- Top Bar (Desktop Only) -->
             <div class="d-none d-lg-flex justify-content-between align-items-center border-bottom" style="padding: 1.5rem 2rem 1rem 2rem;">
                 <div>
                     <h1><?= $page_title ?? 'Dashboard' ?></h1>
@@ -137,19 +134,19 @@
                     </nav>
                 </div>
 
-                <!-- Clean User Dropdown -->
+                <!-- User Dropdown -->
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle d-flex align-items-center gap-2"
                             type="button"
                             data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        <div class="avatar avatar-sm" style="overflow: hidden;">
+                            aria-expanded="false"
+                            style="padding: 0.5rem 1rem;">
+                        <div class="dropdown-avatar">
                             <?php if (!empty($_SESSION['photo'])): ?>
                                 <img src="<?= BASE_URL . 'uploads/photos/' . htmlspecialchars($_SESSION['photo']) ?>"
-                                     alt="Profile Photo"
-                                     style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
+                                     alt="<?= htmlspecialchars($_SESSION['name']) ?>">
                             <?php else: ?>
-                                <?= strtoupper(substr($_SESSION['name'], 0, 1)) ?>
+                                <span class="avatar-letter"><?= strtoupper(substr($_SESSION['name'], 0, 1)) ?></span>
                             <?php endif; ?>
                         </div>
                         <span><?= htmlspecialchars($_SESSION['name']) ?></span>
@@ -172,13 +169,10 @@
                 </div>
             </div>
 
-            <!-- Mobile Page Title - FIXED BREAKPOINT -->
-            <div class="d-lg-none p-3">
-                <h2 class="mb-0"><?= $page_title ?? 'Dashboard' ?></h2>
-            </div>
+            <!-- REMOVED: Mobile Page Title - Each page now handles its own header -->
 
-            <!-- Content Wrapper - FIXED ALIGNMENT -->
-            <div class="p-3" style="padding: 1.5rem 2rem !important;">
+            <!-- Content Wrapper -->
+            <div class="dashboard-content-wrapper">
                 <!-- Alerts -->
                 <?php if (isset($_SESSION['success'])): ?>
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -218,6 +212,82 @@
 
                 <!-- Page Content Goes Here -->
 <?php endif; ?>
+
+<style>
+/* Dropdown Avatar Styles */
+.dropdown-avatar {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+}
+
+.dropdown-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    background: white;
+}
+
+.dropdown-avatar .avatar-letter {
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+/* Content Wrapper Responsive Padding */
+.dashboard-content-wrapper {
+    padding: 1.5rem 2rem;
+}
+
+/* Remove side padding on mobile */
+@media (max-width: 991px) {
+    .dashboard-content-wrapper {
+        padding: 0.75rem 0 !important;
+    }
+
+    .dashboard-content-wrapper .alert {
+        margin-left: 0.75rem;
+        margin-right: 0.75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .dropdown-avatar {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+    }
+
+    .dropdown-avatar .avatar-letter {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-content-wrapper {
+        padding: 0.5rem 0 !important;
+    }
+
+    .dashboard-content-wrapper .alert {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+}
+</style>
 
 <script>
 // Toggle sidebar for mobile

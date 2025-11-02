@@ -14,7 +14,8 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     --muted-bg: #f3f4f6;
     --secondary: #7b8191;
 }
-    .profile-header {
+
+.profile-header {
     background: linear-gradient(90deg, #23272f 0%, #444851 100%);
     border-radius: 16px;
     padding: 2rem;
@@ -26,6 +27,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
 .profile-avatar {
     width: 100px;
     height: 100px;
+    min-width: 100px;
     border-radius: 50%;
     background: #fff;
     color: var(--text);
@@ -35,6 +37,33 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    overflow: hidden;
+    position: relative;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.current-photo-preview {
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 3px solid #f0f0f0;
+}
+
+.current-photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 .profile-card {
@@ -52,6 +81,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     font-weight: 600;
     color: var(--text);
     margin-bottom: 0.5rem;
+    display: block;
 }
 
 .form-group-modern input {
@@ -61,12 +91,14 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     transition: all 0.2s ease;
     background: #fff;
     color: var(--text);
+    width: 100%;
 }
 
 .form-group-modern input:focus {
     border-color: #667eea;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     background: #fff;
+    outline: none;
 }
 
 .form-group-modern input:disabled {
@@ -101,10 +133,11 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     align-items: center;
     justify-content: center;
     font-size: 2rem;
+    flex-shrink: 0;
 }
 
 .stat-icon i {
-    color: var(--text)   !important; /* Force dark gray/black icon */
+    color: var(--text) !important;
 }
 
 .stat-number {
@@ -125,6 +158,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     top: 38px;
     cursor: pointer;
     color: #718096;
+    z-index: 10;
 }
 
 .password-toggle:hover {
@@ -138,6 +172,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     border-radius: 8px;
     transition: background 0.2s, color 0.2s;
 }
+
 .btn-soft-primary:hover, .btn-soft-secondary:hover, .btn-soft-warning:hover {
     background: #444851;
     color: #fff;
@@ -148,17 +183,291 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     color: #fff;
     font-size: 0.875rem;
 }
+
 hr {
     border-color: #f0f0f0;
 }
+
 .text-muted {
     color: #888 !important;
 }
+
 .bi {
-    color: var(--text)  !important;
+    color: var(--text) !important;
 }
+
 .profile-header .bi {
-    color: #fff !important; /* or rgba(255,255,255,0.8) for softer */
+    color: #fff !important;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 992px) {
+    .profile-header {
+        padding: 1.5rem;
+    }
+
+    .profile-header .d-flex {
+        flex-direction: column;
+        text-align: center;
+        align-items: center !important;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        min-width: 80px;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .profile-card {
+        padding: 1.5rem;
+    }
+
+    .stat-card.stat-horizontal {
+        padding: 1rem 1.5rem;
+        min-width: 100%;
+    }
+
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+    }
+
+    .current-photo-preview {
+        width: 70px;
+        height: 70px;
+        min-width: 70px;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-header {
+        padding: 1.25rem;
+        border-radius: 12px;
+    }
+
+    .profile-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .profile-avatar {
+        width: 70px;
+        height: 70px;
+        min-width: 70px;
+        font-size: 1.8rem;
+    }
+
+    .profile-card {
+        padding: 1.25rem;
+        border-radius: 12px;
+    }
+
+    .profile-card h5 {
+        font-size: 1.1rem;
+    }
+
+    .form-group-modern label {
+        font-size: 0.85rem;
+    }
+
+    .form-group-modern input {
+        padding: 0.65rem 0.85rem;
+        font-size: 0.9rem;
+    }
+
+    .password-toggle {
+        top: 36px;
+        right: 10px;
+        font-size: 1.1rem;
+    }
+
+    .stat-card.stat-horizontal {
+        padding: 0.9rem 1.25rem;
+        gap: 0.75rem;
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.3rem;
+    }
+
+    .stat-number {
+        font-size: 1.3rem;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+    }
+
+    .btn-lg {
+        padding: 0.65rem 1rem;
+        font-size: 1rem;
+    }
+
+    .row.g-3 {
+        gap: 1rem !important;
+    }
+
+    .current-photo-preview {
+        width: 65px;
+        height: 65px;
+        min-width: 65px;
+    }
+}
+
+@media (max-width: 576px) {
+    .profile-header {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .profile-header p {
+        font-size: 0.85rem;
+    }
+
+    .profile-avatar {
+        width: 60px;
+        height: 60px;
+        min-width: 60px;
+        font-size: 1.5rem;
+    }
+
+    .profile-card {
+        padding: 1rem;
+    }
+
+    .profile-card h5 {
+        font-size: 1rem;
+        margin-bottom: 1rem !important;
+    }
+
+    .form-group-modern label {
+        font-size: 0.8rem;
+    }
+
+    .form-group-modern input {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .form-group-modern small {
+        font-size: 0.75rem;
+    }
+
+    .password-toggle {
+        top: 35px;
+        right: 8px;
+        font-size: 1rem;
+    }
+
+    .stat-card.stat-horizontal {
+        padding: 0.75rem 1rem;
+        gap: 0.6rem;
+        border-radius: 12px;
+    }
+
+    .stat-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1.1rem;
+    }
+
+    .stat-number {
+        font-size: 1.1rem;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+    }
+
+    .btn-lg {
+        padding: 0.6rem 0.85rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-sm {
+        padding: 0.45rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    hr {
+        margin: 1.5rem 0 !important;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .current-photo-preview {
+        width: 60px;
+        height: 60px;
+        min-width: 60px;
+        margin-top: 0.5rem;
+    }
+
+    /* Make password fields stack better on mobile */
+    .position-relative {
+        position: relative !important;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 400px) {
+    .profile-header {
+        padding: 0.85rem;
+    }
+
+    .profile-avatar {
+        width: 55px;
+        height: 55px;
+        min-width: 55px;
+        font-size: 1.3rem;
+    }
+
+    .profile-card {
+        padding: 0.85rem;
+    }
+
+    .stat-card.stat-horizontal {
+        padding: 0.65rem 0.85rem;
+        gap: 0.5rem;
+    }
+
+    .stat-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+
+    .stat-number {
+        font-size: 1rem;
+    }
+
+    .stat-label {
+        font-size: 0.7rem;
+    }
+
+    .current-photo-preview {
+        width: 55px;
+        height: 55px;
+        min-width: 55px;
+    }
 }
 </style>
 
@@ -166,11 +475,10 @@ hr {
 <!-- Profile Header -->
 <div class="profile-header">
     <div class="d-flex align-items-center gap-3">
-        <div class="profile-avatar" style="overflow: hidden;">
+        <div class="profile-avatar">
             <?php if (!empty($user['photo'])): ?>
                 <img src="<?= BASE_URL . 'uploads/photos/' . htmlspecialchars($user['photo']) ?>"
-                    alt="Profile Photo"
-                    style="width:100px; height:100px; border-radius:50%; object-fit:cover;">
+                    alt="Profile Photo">
             <?php else: ?>
                 <?= strtoupper(substr($user['name'], 0, 1)) ?>
             <?php endif; ?>
@@ -252,12 +560,49 @@ hr {
 
                 <hr class="my-4">
 
+                <!-- Profile Photo Section -->
+                <h5 class="mb-3">
+                    <i class="bi bi-image text-info me-2"></i>
+                    Profile Photo
+                </h5>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6 form-group-modern">
+                        <label for="photo">
+                            <i class="bi bi-upload me-1"></i>Upload New Photo
+                        </label>
+                        <input type="file"
+                            class="form-control"
+                            id="photo"
+                            name="photo"
+                            accept="image/*"
+                            onchange="previewImage(this)">
+                        <small class="text-muted">Supported: JPG, PNG, GIF (Max 5MB)</small>
+                    </div>
+                    <div class="col-md-6">
+                        <?php if (!empty($user['photo'])): ?>
+                            <label>Current Photo</label><br>
+                            <div class="current-photo-preview">
+                                <img src="<?= BASE_URL . 'uploads/photos/' . htmlspecialchars($user['photo']) ?>"
+                                     alt="Profile Photo"
+                                     id="currentPhotoPreview">
+                            </div>
+                        <?php else: ?>
+                            <label>No photo uploaded</label><br>
+                            <div class="current-photo-preview" style="background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-person-circle" style="font-size: 2rem; color: #ccc;"></i>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
                 <!-- Change Password Section -->
                 <h5 class="mb-3">
                     <i class="bi bi-lock text-warning me-2"></i>
                     Change Password (Optional)
                 </h5>
-
 
                 <div class="row g-3">
                     <div class="col-12 form-group-modern position-relative">
@@ -301,25 +646,6 @@ hr {
                 </div>
 
                 <hr class="my-4">
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6 form-group-modern">
-                        <label for="photo">
-                            <i class="bi bi-image me-1"></i>Profile Photo
-                        </label>
-                        <input type="file"
-                            class="form-control"
-                            id="photo"
-                            name="photo"
-                            accept="image/*">
-                        <small class="text-muted">Upload a photo (JPG, PNG, GIF)</small>
-                    </div>
-                    <?php if (!empty($user['photo'])): ?>
-                        <div class="col-md-6">
-                            <label>Current Photo</label><br>
-                            <img src="<?= BASE_URL . 'uploads/photos/' . htmlspecialchars($user['photo']) ?>" alt="Profile Photo" style="width:80px; height:80px; border-radius:50%; object-fit:cover;">
-                        </div>
-                    <?php endif; ?>
-                </div>
 
                 <!-- Action Buttons -->
                 <div class="d-grid gap-2">
@@ -415,6 +741,21 @@ function togglePassword(fieldId) {
         field.type = 'password';
         icon.classList.remove('bi-eye-slash');
         icon.classList.add('bi-eye');
+    }
+}
+
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const preview = document.getElementById('currentPhotoPreview');
+            if (preview) {
+                preview.src = e.target.result;
+            }
+        }
+
+        reader.readAsDataURL(input.files[0]);
     }
 }
 

@@ -41,6 +41,7 @@ class AuthController extends BaseController {
                     $_SESSION['name'] = $user['name'];
                     $_SESSION['email'] = $user['email'];
                     $_SESSION['role'] = $user['role'];
+                    $_SESSION['photo'] = $user['photo'] ?? null; // ADD THIS LINE
 
                     // Log activity
                     $this->userModel->logActivity($user['id'], 'Logged in');
@@ -108,6 +109,7 @@ class AuthController extends BaseController {
                     $_SESSION['name'] = $name;
                     $_SESSION['email'] = $email;
                     $_SESSION['role'] = 'student';
+                    $_SESSION['photo'] = null; // ADD THIS LINE - new users don't have photo yet
 
                     $this->userModel->logActivity($userId, 'Registered and logged in');
 
@@ -130,29 +132,25 @@ class AuthController extends BaseController {
         $this->view('auth/register', $data);
     }
 
-    /**
-     * Handle logout
-     */
+
     public function logout() {
-        // Log activity before destroying session
         if (isset($_SESSION['user_id'])) {
             $this->userModel->logActivity($_SESSION['user_id'], 'Logged out');
         }
 
-        // Clear remember me cookie
         if (isset($_COOKIE['remember_token'])) {
             setcookie('remember_token', '', time() - 3600, '/');
         }
 
-        // Destroy session
+
         session_unset();
         session_destroy();
 
-        // Start new session for flash message
+
         session_start();
         $_SESSION['success'] = 'You have been logged out successfully';
 
-        // Redirect to login
+
         $this->redirect('login');
     }
 }

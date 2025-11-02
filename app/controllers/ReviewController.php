@@ -18,13 +18,35 @@ class ReviewController extends BaseController
     public function index()
     {
         // Admins see all reviews, others see limited
+        // Modified to include user photo
         if ($_SESSION['role'] === 'admin') {
-            $reviews = WebsiteReview::getAllReviews($this->db);
+            $stmt = $this->db->query("
+                SELECT r.*, u.photo as user_photo
+                FROM website_reviews r
+                LEFT JOIN users u ON r.user_id = u.id
+                ORDER BY r.created_at DESC
+            ");
+            $reviews = $stmt->fetchAll();
         } else {
-            $reviews = WebsiteReview::getRecentReviews($this->db, 20);
+            $stmt = $this->db->prepare("
+                SELECT r.*, u.photo as user_photo
+                FROM website_reviews r
+                LEFT JOIN users u ON r.user_id = u.id
+                ORDER BY r.created_at DESC
+                LIMIT ?
+            ");
+            $stmt->execute([20]);
+            $reviews = $stmt->fetchAll();
         }
 
-        $stats = WebsiteReview::getAverageRating($this->db);
+        // Get stats
+        $statsStmt = $this->db->query("
+            SELECT
+                AVG(rating) as avg_rating,
+                COUNT(*) as total_reviews
+            FROM website_reviews
+        ");
+        $stats = $statsStmt->fetch();
 
         $data = [
             'title' => 'Reviews',

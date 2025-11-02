@@ -14,6 +14,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     --muted-bg: #f3f4f6;
     --secondary: #7b8191;
 }
+
 .history-timeline {
     position: relative;
     padding-left: 2rem;
@@ -74,6 +75,101 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .history-timeline {
+        padding-left: 1rem;
+    }
+
+    .history-timeline::before {
+        left: 0;
+        width: 2px;
+    }
+
+    .history-item {
+        padding: 1rem;
+    }
+
+    .history-item::before {
+        left: -1.4rem;
+        top: 1rem;
+        width: 10px;
+        height: 10px;
+    }
+
+    .history-item:hover {
+        transform: translateX(2px);
+    }
+
+    .history-book-thumb,
+    .history-book-placeholder {
+        width: 60px;
+        height: 85px;
+    }
+
+    .history-item .row {
+        flex-direction: column;
+        gap: 1rem !important;
+    }
+
+    .history-item .col-auto {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .history-item .col {
+        width: 100%;
+        text-align: center;
+    }
+
+    .history-item h5 {
+        font-size: 1rem;
+    }
+
+    .history-item .badge {
+        display: inline-block;
+        margin: 0.5rem auto;
+    }
+
+    .history-item .col-auto.d-flex {
+        flex-direction: row !important;
+        justify-content: center;
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    .history-item .btn-sm {
+        flex: 1;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mb-4 h2 {
+        font-size: 1.5rem;
+    }
+
+    .history-book-thumb,
+    .history-book-placeholder {
+        width: 50px;
+        height: 70px;
+    }
+
+    .history-item h5 {
+        font-size: 0.95rem;
+    }
+
+    .history-item .text-muted {
+        font-size: 0.85rem;
+    }
+
+    .history-item .btn-sm {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+    }
 }
 </style>
 

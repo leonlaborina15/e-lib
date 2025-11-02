@@ -17,7 +17,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
 }
 
 .reviews-content {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 1rem;
 }
@@ -39,12 +39,19 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     font-size: 1.1rem;
 }
 
+/* Hide page header on mobile (sidebar already shows title) */
+@media (max-width: 991px) {
+    .page-header {
+        display: none;
+    }
+}
+
 .stats-bar {
     display: flex;
     justify-content: center;
-    gap: 2rem;
+    gap: 3rem;
     margin-bottom: 2rem;
-    padding: 1.5rem;
+    padding: 1.5rem 2rem;
     background: var(--soft-bg);
     border-radius: 12px;
     border: 1px solid var(--border);
@@ -75,8 +82,9 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     border-radius: 16px;
     border: 1px solid var(--border);
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    padding: 2rem;
+    padding: 2.5rem;
     margin-bottom: 3rem;
+    max-width: 100%;
 }
 
 .review-form-card h5 {
@@ -142,7 +150,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     padding: 0.75rem 2rem !important;
     font-weight: 500;
     transition: transform 0.2s, box-shadow 0.2s;
-    display: flex; /* Changed from inline-flex */
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
@@ -159,7 +167,8 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     border-radius: 16px;
     border: 1px solid var(--border);
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    padding: 2rem;
+    padding: 2.5rem;
+    max-width: 100%;
 }
 
 .reviews-list-card h5 {
@@ -170,12 +179,13 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .review-item {
     background: var(--soft-bg);
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 1.75rem;
     margin-bottom: 1rem;
     border: 1px solid var(--border);
     transition: transform 0.2s, box-shadow 0.2s;
@@ -190,63 +200,83 @@ require_once __DIR__ . '/../layouts/sidebar.php';
 .review-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 1rem;
+    gap: 1.5rem;
 }
 
 .reviewer-info {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.25rem;
     flex: 1;
+    min-width: 0;
 }
 
 .reviewer-avatar {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
     border-radius: 50%;
-    background: var(--muted-bg);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary);
+    color: white;
     font-weight: 600;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.reviewer-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 .reviewer-details {
     flex: 1;
+    min-width: 0;
 }
 
 .reviewer-details h6 {
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     color: var(--primary);
     margin-bottom: 0.2rem;
+    word-wrap: break-word;
 }
 
 .review-date {
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     color: var(--secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
 }
 
 .review-actions {
     display: flex;
+    flex-direction: column;
     gap: 0.5rem;
-    align-items: center;
+    align-items: flex-end;
 }
 
 .star-display {
     color: var(--gold);
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     letter-spacing: 2px;
+    white-space: nowrap;
 }
 
 .review-text {
     color: var(--secondary);
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-size: 1rem;
+    line-height: 1.7;
     margin-top: 0.5rem;
+    word-wrap: break-word;
 }
 
 .btn-delete-review {
@@ -262,6 +292,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     align-items: center;
     gap: 0.3rem;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .btn-delete-review:hover {
@@ -319,33 +350,175 @@ require_once __DIR__ . '/../layouts/sidebar.php';
     margin-left: 0.5rem;
 }
 
+/* Mobile Responsive Styles */
 @media (max-width: 768px) {
-    .page-header h2 {
-        font-size: 1.8rem;
+    .reviews-content {
+        padding: 0;
     }
 
     .stats-bar {
         flex-direction: column;
         gap: 1rem;
+        padding: 1rem;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 10px;
+    }
+
+    .stat-item .stat-number {
+        font-size: 1.5rem;
+    }
+
+    .review-form-card,
+    .reviews-list-card {
+        padding: 1.25rem;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+        border-radius: 12px;
+    }
+
+    .review-form-card {
+        margin-bottom: 1.5rem;
+    }
+
+    .review-form-card h5,
+    .reviews-list-card h5 {
+        font-size: 1.1rem;
     }
 
     .review-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
+        gap: 1rem;
     }
 
     .reviewer-info {
         width: 100%;
+        gap: 1rem;
     }
 
-    .star-display {
+    .reviewer-avatar {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        font-size: 1.2rem;
+    }
+
+    .reviewer-details h6 {
         font-size: 1rem;
+    }
+
+    .review-date {
+        font-size: 0.85rem;
     }
 
     .review-actions {
         width: 100%;
-        justify-content: flex-end;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .star-display {
+        font-size: 1.1rem;
+        order: 1;
+    }
+
+    .btn-delete-review {
+        order: 2;
+        font-size: 0.8rem;
+        padding: 0.35rem 0.6rem !important;
+    }
+
+    .review-text {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .review-item {
+        padding: 1.25rem;
+    }
+
+    .star-rating-select {
+        font-size: 1.5rem;
+        justify-content: center;
+    }
+
+    .admin-badge {
+        display: block;
+        width: fit-content;
+        margin: 0.5rem 0 0 0;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 1rem;
+    }
+
+    .btn-submit-review {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .reviews-content {
+        padding: 0;
+    }
+
+    .stats-bar,
+    .review-form-card,
+    .reviews-list-card {
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .review-item {
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .reviewer-avatar {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        font-size: 1.1rem;
+    }
+
+    .reviewer-details h6 {
+        font-size: 0.95rem;
+    }
+
+    .star-display {
+        font-size: 1rem;
+        letter-spacing: 1px;
+    }
+
+    .btn-delete-review {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.5rem !important;
+    }
+
+    .btn-delete-review i {
+        font-size: 0.75rem;
+    }
+
+    .review-text {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 0.95rem;
+        padding: 0.65rem 0.85rem;
+    }
+
+    .btn-submit-review {
+        padding: 0.65rem 1.25rem !important;
+        font-size: 0.95rem;
     }
 }
 
@@ -353,7 +526,7 @@ require_once __DIR__ . '/../layouts/sidebar.php';
 </style>
 
 <div class="dashboard-content reviews-content">
-    <!-- Page Header -->
+    <!-- Page Header (Desktop Only) -->
     <div class="page-header">
         <h2>
             <i class="bi bi-star-fill" style="color: var(--gold);"></i>
@@ -462,7 +635,12 @@ require_once __DIR__ . '/../layouts/sidebar.php';
                     <div class="review-header">
                         <div class="reviewer-info">
                             <div class="reviewer-avatar">
-                                <?= strtoupper(substr($row['name'], 0, 1)) ?>
+                                <?php if (!empty($row['user_photo'])): ?>
+                                    <img src="<?= BASE_URL . 'uploads/photos/' . htmlspecialchars($row['user_photo']) ?>"
+                                         alt="<?= htmlspecialchars($row['name']) ?>">
+                                <?php else: ?>
+                                    <?= strtoupper(substr($row['name'], 0, 1)) ?>
+                                <?php endif; ?>
                             </div>
                             <div class="reviewer-details">
                                 <h6><?= htmlspecialchars($row['name']) ?></h6>
